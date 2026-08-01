@@ -35,11 +35,11 @@ export default function SatInspector() {
 
   if (!selectedSat) {
     return (
-      <div style={{ color: '#00f0ff', fontFamily: 'Orbitron, sans-serif' }}>
-        <div style={{ fontSize: '0.8rem', color: '#ff0055', marginBottom: '1rem', borderBottom: '1px solid rgba(0,240,255,0.3)', paddingBottom: '0.5rem' }}>
+      <div className="c2-section">
+        <div className="c2-section__title c2-section__title--alert">
           DEEP ORBITAL INSPECTOR
         </div>
-        <div style={{ textAlign: 'center', padding: '2rem 0', color: 'rgba(255,255,255,0.4)', fontSize: '0.75rem', border: '1px dashed rgba(0,240,255,0.2)', borderRadius: '0.6rem' }}>
+        <div className="c2-empty">
           [ Кликни на спутник в 3D-секторе для инициализации сканирования ]
         </div>
       </div>
@@ -47,27 +47,30 @@ export default function SatInspector() {
   }
 
   return (
-    <div style={{ color: '#00f0ff', fontFamily: 'Orbitron, sans-serif' }}>
-      <div style={{ fontSize: '0.8rem', color: '#ff0055', marginBottom: '1rem', borderBottom: '1px solid rgba(0,240,255,0.3)', paddingBottom: '0.5rem', display: 'flex', justifyContent: 'space-between' }}>
+    <div className="c2-section">
+      <div className="c2-section__title c2-section__title--alert">
         <span>INSPECTOR: {selectedSat.name}</span>
-        <span style={{ color: '#00ff66' }}>LIVE LINK ACTIVE</span>
+        <span className="c2-chip c2-chip--live">
+          <span className="c2-dot" />
+          LIVE LINK ACTIVE
+        </span>
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.8rem' }}>
-        <div style={{ background: 'rgba(0,240,255,0.03)', border: '1px solid rgba(0,240,255,0.15)', borderRadius: '0.6rem', padding: '0.8rem' }}>
-          <div style={{ fontSize: '0.6rem', color: 'rgba(255,255,255,0.5)' }}>ВЫСОТА</div>
-          <div style={{ fontSize: '0.9rem', fontWeight: 'bold', color: '#00f0ff', marginTop: '0.2rem' }}>{telemetry?.alt || '---'} км</div>
+      <div className="c2-metric-grid">
+        <div className="c2-metric">
+          <div className="c2-label">ВЫСОТА</div>
+          <div className="c2-value">{telemetry?.alt || '---'} км</div>
         </div>
-        <div style={{ background: 'rgba(0,240,255,0.03)', border: '1px solid rgba(0,240,255,0.15)', borderRadius: '0.6rem', padding: '0.8rem' }}>
-          <div style={{ fontSize: '0.6rem', color: 'rgba(255,255,255,0.5)' }}>СКОРОСТЬ</div>
-          <div style={{ fontSize: '0.9rem', fontWeight: 'bold', color: '#00ff66', marginTop: '0.2rem' }}>{telemetry?.vel || '---'} км/с</div>
+        <div className="c2-metric">
+          <div className="c2-label">СКОРОСТЬ</div>
+          <div className="c2-value c2-value--signal">{telemetry?.vel || '---'} км/с</div>
         </div>
-        <div style={{ background: 'rgba(0,240,255,0.03)', border: '1px solid rgba(0,240,255,0.15)', borderRadius: '0.6rem', padding: '0.8rem' }}>
-          <div style={{ fontSize: '0.6rem', color: 'rgba(255,255,255,0.5)' }}>ШИРОТА</div>
-          <div style={{ fontSize: '0.9rem', fontWeight: 'bold', color: '#ff0055', marginTop: '0.2rem' }}>{telemetry?.lat || '---'}°</div>
+        <div className="c2-metric">
+          <div className="c2-label">ШИРОТА</div>
+          <div className="c2-value c2-value--plasma">{telemetry?.lat || '---'}°</div>
         </div>
-        <div style={{ background: 'rgba(0,240,255,0.03)', border: '1px solid rgba(0,240,255,0.15)', borderRadius: '0.6rem', padding: '0.8rem' }}>
-          <div style={{ fontSize: '0.6rem', color: 'rgba(255,255,255,0.5)' }}>ДОЛГОТА</div>
-          <div style={{ fontSize: '0.9rem', fontWeight: 'bold', color: '#00f0ff', marginTop: '0.2rem' }}>{telemetry?.lon || '---'}°</div>
+        <div className="c2-metric">
+          <div className="c2-label">ДОЛГОТА</div>
+          <div className="c2-value">{telemetry?.lon || '---'}°</div>
         </div>
       </div>
     </div>

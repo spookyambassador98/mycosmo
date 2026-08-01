@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import useStore from '../store/useStore';
+import C2Nav from './C2Nav';
 
-export default function SolarMatrixView({ onSwitch }) {
-  const { lang, setLang } = useStore();
+export default function SolarMatrixView({ activePage, onNavigate }) {
+  const { lang } = useStore();
   const canvasRef = useRef(null);
 
   const [solarData, setSolarData] = useState({
@@ -14,7 +15,7 @@ export default function SolarMatrixView({ onSwitch }) {
 
   const t = {
     RU: {
-      header: 'ОРБИТАЛЬНЫЙ C2 // СТРАНИЦА 4: СУПЕРВИЗОР СОЛНЦА (4 КВАДРАТА)',
+      header: 'ОРБИТАЛЬНЫЙ C2 // СУПЕРВИЗОР СОЛНЦА',
       back: 'ВЕРНУТЬСЯ НА ГЛАВНЫЙ ЭКРАН [1]',
       q1Title: 'ПОТОК РЕНТГЕНОВСКОГО ИЗЛУЧЕНИЯ (X-RAY)',
       q2Title: 'РИЛ-ТАЙМ СИМУЛЯЦИЯ СОЛНЕЧНОГО ВЕТРА',
@@ -30,7 +31,7 @@ export default function SolarMatrixView({ onSwitch }) {
       statusWarning: 'ВОЗМУЩЕНИЕ'
     },
     EN: {
-      header: 'ORBITAL C2 // PAGE 4: SOLAR SUPERVISOR (4 QUADRANTS)',
+      header: 'ORBITAL C2 // SOLAR SUPERVISOR',
       back: 'BACK TO MAIN SCREEN [1]',
       q1Title: 'X-RAY FLUX MONITOR',
       q2Title: 'REALTIME SOLAR WIND SIMULATOR',
@@ -119,78 +120,69 @@ export default function SolarMatrixView({ onSwitch }) {
   }, []);
 
   return (
-    <div style={{ width: '100vw', height: '100vh', background: '#050508', padding: '1rem', boxSizing: 'border-box', display: 'flex', flexDirection: 'column', gap: '1rem', fontFamily: 'Orbitron, sans-serif', overflow: 'hidden' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(0,240,255,0.2)', borderRadius: '1rem', padding: '0.8rem 1.5rem', flexShrink: 0 }}>
-        <h1 style={{ color: '#00f0ff', fontSize: '1rem', margin: 0 }}>{t[lang].header}</h1>
-        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-          <button onClick={() => setLang(lang === 'RU' ? 'EN' : 'RU')} style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(0,240,255,0.4)', color: '#00f0ff', padding: '0.5rem 0.8rem', borderRadius: '0.5rem', cursor: 'pointer', fontFamily: 'Orbitron, sans-serif', fontWeight: 'bold' }}>
-            LANG: {lang}
-          </button>
-          <button onClick={onSwitch} style={{ background: 'rgba(255,0,85,0.1)', border: '1px solid #ff0055', color: '#ff0055', padding: '0.5rem 1.2rem', borderRadius: '0.5rem', cursor: 'pointer', fontFamily: 'Orbitron, sans-serif', fontWeight: 'bold' }}>
-            {t[lang].back}
-          </button>
-        </div>
-      </div>
+    <div className="c2-deck">
+      <div className="c2-atmosphere" />
+      <header className="c2-header">
+        <h1 className="c2-page-title">{t[lang].header}</h1>
+        <C2Nav activePage={activePage} onNavigate={onNavigate} />
+      </header>
 
-      {/* 4 КВАДРАТА (2х2) */}
-      <div style={{ flex: 1, display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gridTemplateRows: 'repeat(2, 1fr)', gap: '1rem', overflow: 'hidden' }}>
-        
-        {/* КВАДРАТ 1: Рентгеновский поток */}
-        <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(0,240,255,0.2)', borderRadius: '1.5rem', padding: '1.5rem', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+      <div className="c2-matrix-grid">
+        <div className="c2-panel c2-panel--pad" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+          <div className="c2-panel__sheen" />
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ color: '#ff3c7e', fontSize: '1.0rem', fontWeight: 'bold' }}>{t[lang].q1Title}</span>
-            <span style={{ color: '#00ff66', fontSize: '0.75rem', background: 'rgba(0,255,102,0.1)', padding: '0.3rem 0.6rem', borderRadius: '0.4rem' }}>{t[lang].statusLive}</span>
+            <span className="c2-section__title c2-section__title--alert" style={{ border: 'none', padding: 0, fontSize: '0.9rem' }}>{t[lang].q1Title}</span>
+            <span className="c2-chip c2-chip--live">{t[lang].statusLive}</span>
           </div>
           <div style={{ textAlign: 'center', padding: '1rem 0' }}>
-            <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.5)' }}>{t[lang].fluxLabel}</div>
-            <div style={{ fontSize: '2.5rem', color: '#ffcc00', fontWeight: 'bold', marginTop: '0.5rem', textShadow: '0 0 20px rgba(255,204,0,0.3)' }}>{solarData.flux}</div>
+            <div className="c2-label">{t[lang].fluxLabel}</div>
+            <div className="c2-value c2-value--xl c2-value--amber">{solarData.flux}</div>
           </div>
-          <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)' }}>GOES-16 XRS High Energy Channel Telemetry.</div>
+          <div className="c2-muted">GOES-16 XRS High Energy Channel Telemetry.</div>
         </div>
 
-        {/* КВАДРАТ 2: Рил-тайм симуляция солнечного ветра (Визуал) */}
-        <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(0,240,255,0.2)', borderRadius: '1.5rem', padding: '1.2rem', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+        <div className="c2-panel c2-panel--pad" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+          <div className="c2-panel__sheen" />
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ color: '#00f0ff', fontSize: '1.0rem', fontWeight: 'bold' }}>{t[lang].q2Title}</span>
-            <span style={{ color: '#00ff66', fontSize: '0.75rem', background: 'rgba(0,255,102,0.1)', padding: '0.3rem 0.6rem', borderRadius: '0.4rem' }}>{t[lang].statusSim}</span>
+            <span className="c2-section__title" style={{ border: 'none', padding: 0, fontSize: '0.9rem' }}>{t[lang].q2Title}</span>
+            <span className="c2-chip c2-chip--live">{t[lang].statusSim}</span>
           </div>
-          <div style={{ flex: 1, position: 'relative', overflow: 'hidden', margin: '0.5rem 0', borderRadius: '0.8rem', background: '#030305', border: '1px solid rgba(0,240,255,0.1)' }}>
-            <canvas ref={canvasRef} style={{ display: 'block', width: '100%', height: '100%' }} />
+          <div className="c2-canvas-well" style={{ margin: '0.5rem 0' }}>
+            <canvas ref={canvasRef} />
           </div>
-          <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', display: 'flex', justifyContent: 'space-between' }}>
+          <div className="c2-muted" style={{ display: 'flex', justifyContent: 'space-between' }}>
             <span>{t[lang].speedLabel}: <b>{solarData.protonSpeed} km/s</b></span>
             <span>Vector: +X Radial</span>
           </div>
         </div>
 
-        {/* КВАДРАТ 3: Геомагнитный Kp-индекс */}
-        <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(0,240,255,0.2)', borderRadius: '1.5rem', padding: '1.5rem', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+        <div className="c2-panel c2-panel--pad" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+          <div className="c2-panel__sheen" />
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ color: '#ff3c7e', fontSize: '1.0rem', fontWeight: 'bold' }}>{t[lang].q3Title}</span>
-            <span style={{ color: solarData.kpIndex > 4 ? '#ff0055' : '#00ff66', fontSize: '0.75rem', background: solarData.kpIndex > 4 ? 'rgba(255,0,85,0.1)' : 'rgba(0,255,102,0.1)', padding: '0.3rem 0.6rem', borderRadius: '0.4rem' }}>
+            <span className="c2-section__title c2-section__title--alert" style={{ border: 'none', padding: 0, fontSize: '0.9rem' }}>{t[lang].q3Title}</span>
+            <span className={`c2-chip ${solarData.kpIndex > 4 ? 'c2-chip--alert' : 'c2-chip--live'}`}>
               {solarData.kpIndex > 4 ? t[lang].statusWarning : t[lang].statusStable}
             </span>
           </div>
           <div style={{ textAlign: 'center', padding: '1rem 0' }}>
-            <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.5)' }}>{t[lang].kpLabel}</div>
-            <div style={{ fontSize: '2.5rem', color: '#00f0ff', fontWeight: 'bold', marginTop: '0.5rem', textShadow: '0 0 20px rgba(0,240,255,0.3)' }}>{solarData.kpIndex}</div>
+            <div className="c2-label">{t[lang].kpLabel}</div>
+            <div className="c2-value c2-value--xl">{solarData.kpIndex}</div>
           </div>
-          <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)' }}>NOAA Space Weather Prediction Center metric.</div>
+          <div className="c2-muted">NOAA Space Weather Prediction Center metric.</div>
         </div>
 
-        {/* КВАДРАТ 4: Температура короны */}
-        <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(0,240,255,0.2)', borderRadius: '1.5rem', padding: '1.5rem', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+        <div className="c2-panel c2-panel--pad" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+          <div className="c2-panel__sheen" />
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ color: '#00f0ff', fontSize: '1.0rem', fontWeight: 'bold' }}>{t[lang].q4Title}</span>
-            <span style={{ color: '#00ff66', fontSize: '0.75rem', background: 'rgba(0,255,102,0.1)', padding: '0.3rem 0.6rem', borderRadius: '0.4rem' }}>{t[lang].statusLive}</span>
+            <span className="c2-section__title" style={{ border: 'none', padding: 0, fontSize: '0.9rem' }}>{t[lang].q4Title}</span>
+            <span className="c2-chip c2-chip--live">{t[lang].statusLive}</span>
           </div>
           <div style={{ textAlign: 'center', padding: '1rem 0' }}>
-            <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.5)' }}>{t[lang].tempLabel}</div>
-            <div style={{ fontSize: '2.5rem', color: '#ff9900', fontWeight: 'bold', marginTop: '0.5rem', textShadow: '0 0 20px rgba(255,153,0,0.3)' }}>{solarData.temp} K</div>
+            <div className="c2-label">{t[lang].tempLabel}</div>
+            <div className="c2-value c2-value--xl c2-value--amber">{solarData.temp} K</div>
           </div>
-          <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)' }}>SDO Atmospheric Imaging Assembly (AIA 171).</div>
+          <div className="c2-muted">SDO Atmospheric Imaging Assembly (AIA 171).</div>
         </div>
-
       </div>
     </div>
   );

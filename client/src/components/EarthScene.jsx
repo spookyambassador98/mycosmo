@@ -160,19 +160,23 @@ export default function EarthScene() {
                   setSelectedSat(item);
                 }}
                 style={{
-                  background: isSelected ? 'rgba(0, 240, 255, 0.25)' : 'rgba(5, 5, 8, 0.9)',
+                  background: isSelected
+                    ? 'linear-gradient(180deg, rgba(0, 240, 255, 0.22), rgba(5, 7, 12, 0.92))'
+                    : 'linear-gradient(180deg, rgba(12, 14, 20, 0.92), rgba(5, 6, 10, 0.95))',
+                  backdropFilter: 'blur(10px)',
                   border: `1px solid ${item.color}`,
                   color: item.color,
-                  padding: '4px 10px',
+                  padding: '5px 11px',
                   borderRadius: '4px',
                   fontSize: '10px',
                   fontFamily: 'Orbitron, sans-serif',
-                  fontWeight: 'bold',
+                  fontWeight: 700,
                   whiteSpace: 'nowrap',
                   pointerEvents: 'auto',
                   cursor: 'pointer',
-                  boxShadow: `0 0 12px ${item.color}50`,
-                  letterSpacing: '1px'
+                  boxShadow: `0 0 14px ${item.color}40, inset 0 1px 0 rgba(255,255,255,0.06)`,
+                  letterSpacing: '0.12em',
+                  textTransform: 'uppercase'
                 }}
               >
                 {item.name}

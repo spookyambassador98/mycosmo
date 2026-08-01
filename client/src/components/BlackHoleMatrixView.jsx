@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import useStore from '../store/useStore';
+import C2Nav from './C2Nav';
 
-export default function BlackHoleMatrixView({ onSwitch }) {
-  const { lang, setLang } = useStore();
+export default function BlackHoleMatrixView({ activePage, onNavigate }) {
+  const { lang } = useStore();
   const canvasRef = useRef(null);
 
   const [bhData, setBhData] = useState({
@@ -14,7 +15,7 @@ export default function BlackHoleMatrixView({ onSwitch }) {
 
   const t = {
     RU: {
-      header: 'ОРБИТАЛЬНЫЙ C2 // СТРАНИЦА 5: СУПЕРВИЗОР СИНГУЛЯРНОСТИ',
+      header: 'ОРБИТАЛЬНЫЙ C2 // ЧЕРНАЯ ДЫРА',
       back: 'НАЗАД [1]',
       canvasTitle: 'АККРЕЦИОННЫЙ ДИСК КЕРРА // РЕЛЯТИВИСТСКИЙ ЛЕНЗИНГ',
       q1Title: 'МАССА И РАДИУС ШВАРЦШИЛЬДА',
@@ -25,7 +26,7 @@ export default function BlackHoleMatrixView({ onSwitch }) {
       spagLabel: 'ПРИЛИВНЫЕ СИЛЫ'
     },
     EN: {
-      header: 'ORBITAL C2 // PAGE 5: SINGULARITY SUPERVISOR',
+      header: 'ORBITAL C2 // BLACK HOLE',
       back: 'BACK [1]',
       canvasTitle: 'KERR ACCRETION DISK // RELATIVISTIC LENSING',
       q1Title: 'SCHWARZSCHILD MASS & RADIUS',
@@ -159,76 +160,65 @@ export default function BlackHoleMatrixView({ onSwitch }) {
   }, []);
 
   return (
-    <div style={{ width: '100vw', height: '100vh', background: '#030305', padding: '1rem', boxSizing: 'border-box', display: 'flex', flexDirection: 'column', gap: '1rem', fontFamily: 'Orbitron, sans-serif', overflow: 'hidden' }}>
-      
-      {/* ХЕДЕР */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'linear-gradient(90deg, rgba(255,153,0,0.05), rgba(0,240,255,0.02))', border: '1px solid rgba(255,153,0,0.3)', borderRadius: '1rem', padding: '0.8rem 1.5rem', flexShrink: 0, boxShadow: 'inset 0 0 20px rgba(255,153,0,0.05)' }}>
-        <h1 style={{ color: '#ff9900', fontSize: '1rem', margin: 0, textShadow: '0 0 10px rgba(255,153,0,0.4)' }}>{t[lang].header}</h1>
-        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-          <button onClick={() => setLang(lang === 'RU' ? 'EN' : 'RU')} style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,153,0,0.4)', color: '#ff9900', padding: '0.5rem 0.9rem', borderRadius: '0.5rem', cursor: 'pointer', fontFamily: 'Orbitron, sans-serif', fontWeight: 'bold' }}>
-            LANG: {lang}
-          </button>
-          <button onClick={onSwitch} style={{ background: 'rgba(255,0,85,0.1)', border: '1px solid #ff0055', color: '#ff0055', padding: '0.5rem 1.2rem', borderRadius: '0.5rem', cursor: 'pointer', fontFamily: 'Orbitron, sans-serif', fontWeight: 'bold', boxShadow: '0 0 10px rgba(255,0,85,0.2)' }}>
-            {t[lang].back}
-          </button>
-        </div>
-      </div>
+    <div className="c2-deck">
+      <div className="c2-atmosphere" />
+      <header className="c2-header" style={{ borderColor: 'rgba(255,176,32,0.3)' }}>
+        <h1 className="c2-page-title c2-page-title--amber">{t[lang].header}</h1>
+        <C2Nav activePage={activePage} onNavigate={onNavigate} />
+      </header>
 
-      {/* ОСНОВНОЙ РАЗДЕЛ: МЕТРИКИ СЛЕВА (СТОЛБИК), ХОЛСТ СПРАВА (ВСЯ ПРАВАЯ ЧАСТЬ) */}
-      <div style={{ flex: 1, display: 'grid', gridTemplateColumns: '1fr 2.4fr', gap: '1rem', overflow: 'hidden' }}>
-        
-        {/* ЛЕВАЯ КОЛОНКА: СТОЛБИК МЕТРИК */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', overflowY: 'auto' }}>
-          
-          <div style={{ background: 'rgba(5,5,8,0.7)', border: '1px solid rgba(255,153,0,0.25)', borderRadius: '1.2rem', padding: '1.2rem', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', backdropFilter: 'blur(10px)', flex: 1, minHeight: '120px' }}>
+      <div className="c2-matrix-grid c2-matrix-grid--wide">
+        <div className="c2-col">
+          <div className="c2-panel c2-panel--pad c2-panel--amber c2-panel--fill" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: '120px' }}>
+            <div className="c2-panel__sheen" />
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ color: '#ff9900', fontSize: '0.8rem', fontWeight: 'bold' }}>{t[lang].q1Title}</span>
-              <span style={{ color: '#00ff66', fontSize: '0.65rem', background: 'rgba(0,255,102,0.1)', padding: '0.2rem 0.5rem', borderRadius: '0.3rem' }}>ACTIVE</span>
+              <span className="c2-label" style={{ color: 'var(--amber)', fontFamily: 'var(--font-display)' }}>{t[lang].q1Title}</span>
+              <span className="c2-chip c2-chip--live">ACTIVE</span>
             </div>
             <div style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '0.6rem', color: 'rgba(255,255,255,0.4)', letterSpacing: '1px' }}>{t[lang].radiusLabel}</div>
-              <div style={{ fontSize: '1.6rem', color: '#00f0ff', fontWeight: 'bold', marginTop: '0.2rem', textShadow: '0 0 15px rgba(0,240,255,0.4)' }}>{bhData.radius}</div>
+              <div className="c2-label">{t[lang].radiusLabel}</div>
+              <div className="c2-value c2-value--lg">{bhData.radius}</div>
             </div>
-            <div style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.35)' }}>Mass: {bhData.mass}</div>
+            <div className="c2-muted">Mass: {bhData.mass}</div>
           </div>
 
-          <div style={{ background: 'rgba(5,5,8,0.7)', border: '1px solid rgba(255,153,0,0.25)', borderRadius: '1.2rem', padding: '1.2rem', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', backdropFilter: 'blur(10px)', flex: 1, minHeight: '120px' }}>
+          <div className="c2-panel c2-panel--pad c2-panel--amber c2-panel--fill" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: '120px' }}>
+            <div className="c2-panel__sheen" />
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ color: '#ff3c7e', fontSize: '0.8rem', fontWeight: 'bold' }}>{t[lang].q2Title}</span>
-              <span style={{ color: '#00ff66', fontSize: '0.65rem', background: 'rgba(0,255,102,0.1)', padding: '0.2rem 0.5rem', borderRadius: '0.3rem' }}>QUANTUM</span>
+              <span className="c2-label" style={{ color: 'var(--plasma)', fontFamily: 'var(--font-display)' }}>{t[lang].q2Title}</span>
+              <span className="c2-chip c2-chip--live">QUANTUM</span>
             </div>
             <div style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '0.6rem', color: 'rgba(255,255,255,0.4)', letterSpacing: '1px' }}>{t[lang].tempLabel}</div>
-              <div style={{ fontSize: '1.6rem', color: '#ffcc00', fontWeight: 'bold', marginTop: '0.2rem', textShadow: '0 0 15px rgba(255,204,0,0.4)' }}>{bhData.hawkingTemp}</div>
+              <div className="c2-label">{t[lang].tempLabel}</div>
+              <div className="c2-value c2-value--lg c2-value--amber">{bhData.hawkingTemp}</div>
             </div>
-            <div style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.35)' }}>Pair production flux active</div>
+            <div className="c2-muted">Pair production flux active</div>
           </div>
 
-          <div style={{ background: 'rgba(5,5,8,0.7)', border: '1px solid rgba(255,153,0,0.25)', borderRadius: '1.2rem', padding: '1.2rem', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', backdropFilter: 'blur(10px)', flex: 1, minHeight: '120px' }}>
+          <div className="c2-panel c2-panel--pad c2-panel--amber c2-panel--fill" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: '120px' }}>
+            <div className="c2-panel__sheen" />
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ color: '#00f0ff', fontSize: '0.8rem', fontWeight: 'bold' }}>{t[lang].q3Title}</span>
-              <span style={{ color: '#ff0055', fontSize: '0.65rem', background: 'rgba(255,0,85,0.1)', padding: '0.2rem 0.5rem', borderRadius: '0.3rem' }}>CRITICAL</span>
+              <span className="c2-label" style={{ color: 'var(--ion)', fontFamily: 'var(--font-display)' }}>{t[lang].q3Title}</span>
+              <span className="c2-chip c2-chip--alert">CRITICAL</span>
             </div>
             <div style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '0.6rem', color: 'rgba(255,255,255,0.4)', letterSpacing: '1px' }}>{t[lang].spagLabel}</div>
-              <div style={{ fontSize: '1.3rem', color: '#ff0055', fontWeight: 'bold', marginTop: '0.2rem', textShadow: '0 0 15px rgba(255,0,85,0.5)' }}>{bhData.spagIndex}</div>
+              <div className="c2-label">{t[lang].spagLabel}</div>
+              <div className="c2-value c2-value--lg c2-value--danger">{bhData.spagIndex}</div>
             </div>
-            <div style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.35)' }}>Tidal gradient threshold exceeded</div>
-          </div>
-
-        </div>
-
-        {/* ПРАВАЯ КОЛОНКА: ПОЛНОРАЗМЕРНЫЙ ХОЛСТ ЧЕРНОЙ ДЫРЫ НА ВСЮ ВЫСОТУ */}
-        <div style={{ background: 'rgba(5,5,8,0.7)', border: '1px solid rgba(255,153,0,0.3)', borderRadius: '1.5rem', padding: '1rem', display: 'flex', flexDirection: 'column', overflow: 'hidden', backdropFilter: 'blur(10px)', boxShadow: '0 8px 32px rgba(0,0,0,0.5)' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem', padding: '0 0.5rem' }}>
-            <span style={{ color: '#ff9900', fontSize: '0.85rem', fontWeight: 'bold', letterSpacing: '1px' }}>{t[lang].canvasTitle}</span>
-            <span style={{ color: '#00ff66', fontSize: '0.7rem', background: 'rgba(0,255,102,0.1)', border: '1px solid rgba(0,255,102,0.3)', padding: '0.3rem 0.7rem', borderRadius: '0.4rem', boxShadow: '0 0 10px rgba(0,255,102,0.2)' }}>KERR METRIC STABLE</span>
-          </div>
-          <div style={{ flex: 1, position: 'relative', overflow: 'hidden', borderRadius: '1rem', background: '#010103', border: '1px solid rgba(255,153,0,0.15)' }}>
-            <canvas ref={canvasRef} style={{ display: 'block', width: '100%', height: '100%' }} />
+            <div className="c2-muted">Tidal gradient threshold exceeded</div>
           </div>
         </div>
 
+        <div className="c2-panel c2-panel--pad c2-panel--amber" style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+          <div className="c2-panel__sheen" />
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+            <span className="c2-page-title c2-page-title--amber" style={{ fontSize: '0.8rem' }}>{t[lang].canvasTitle}</span>
+            <span className="c2-chip c2-chip--live">KERR METRIC STABLE</span>
+          </div>
+          <div className="c2-canvas-well c2-canvas-well--amber">
+            <canvas ref={canvasRef} />
+          </div>
+        </div>
       </div>
     </div>
   );

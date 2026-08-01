@@ -1,11 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600;700&display=swap');
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
+/* Entry fallback — primary design system lives in styles/index.css */
 body {
   margin: 0;
-  background: #050508;
-  color: #00f0ff;
+  background: #020206;
+  color: #e6eef7;
   overflow: hidden;
 }

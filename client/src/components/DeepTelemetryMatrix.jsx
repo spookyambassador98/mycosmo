@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import useStore from '../store/useStore';
+import C2Nav from './C2Nav';
 
-export default function DeepTelemetryMatrix({ onSwitch }) {
+export default function DeepTelemetryMatrix({ activePage, onNavigate }) {
   const [telemetry, setTelemetry] = useState({
     tec: 0, s4: 0, plasmaFreq: 0,
     cnr: 0, ber: 0, bitrate: 0,
@@ -9,11 +10,11 @@ export default function DeepTelemetryMatrix({ onSwitch }) {
     qber: 0, keyStream: '0x00000000', rate: 0
   });
 
-  const { lang, setLang } = useStore();
+  const { lang } = useStore();
 
   const t = {
     RU: {
-      header: 'ОРБИТАЛЬНЫЙ C2 // СТРАНИЦА 3: ХАРДКОРНЫЕ СЕНСОРЫ',
+      header: 'ОРБИТАЛЬНЫЙ C2 // СЕНСОРЫ',
       back: 'ВЕРНУТЬСЯ НА ГЛАВНЫЙ ЭКРАН [1]',
       ion: 'МОНИТОР ИОНОСФЕРНОЙ ПЛАЗМЫ',
       spec: 'СПЕКТР НЕСУЩЕЙ ДАЛЬНЕГО КОСМОСА',
@@ -35,7 +36,7 @@ export default function DeepTelemetryMatrix({ onSwitch }) {
       stream: 'ПОТОК КЛЮЧЕЙ'
     },
     EN: {
-      header: 'ORBITAL C2 // PAGE 3: HARDCORE SENSORS',
+      header: 'ORBITAL C2 // SENSORS',
       back: 'BACK TO MAIN SCREEN [1]',
       ion: 'IONOSPHERIC PLASMA MONITOR',
       spec: 'DEEP SPACE CARRIER SPECTRUM',
@@ -80,105 +81,67 @@ export default function DeepTelemetryMatrix({ onSwitch }) {
   }, [lang]);
 
   return (
-    <div style={{ width: '100vw', height: '100vh', background: '#050508', padding: '1rem', boxSizing: 'border-box', display: 'flex', flexDirection: 'column', gap: '1rem', fontFamily: 'Orbitron, sans-serif', overflow: 'hidden' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(0,240,255,0.2)', borderRadius: '1rem', padding: '0.8rem 1.5rem', flexShrink: 0 }}>
-        <h1 style={{ color: '#00f0ff', fontSize: '1rem', margin: 0 }}>{t[lang].header}</h1>
-        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-          <button onClick={() => setLang(lang === 'RU' ? 'EN' : 'RU')} style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(0,240,255,0.4)', color: '#00f0ff', padding: '0.5rem 0.8rem', borderRadius: '0.5rem', cursor: 'pointer', fontFamily: 'Orbitron, sans-serif', fontWeight: 'bold' }}>
-            LANG: {lang}
-          </button>
-          <button onClick={onSwitch} style={{ background: 'rgba(255,0,85,0.1)', border: '1px solid #ff0055', color: '#ff0055', padding: '0.5rem 1.2rem', borderRadius: '0.5rem', cursor: 'pointer', fontFamily: 'Orbitron, sans-serif', fontWeight: 'bold' }}>
-            {t[lang].back}
-          </button>
-        </div>
-      </div>
-      <div style={{ flex: 1, display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gridTemplateRows: 'repeat(2, 1fr)', gap: '1rem', overflow: 'hidden' }}>
-        <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(0,240,255,0.2)', borderRadius: '1.5rem', padding: '1.5rem', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+    <div className="c2-deck">
+      <div className="c2-atmosphere" />
+      <header className="c2-header">
+        <h1 className="c2-page-title">{t[lang].header}</h1>
+        <C2Nav activePage={activePage} onNavigate={onNavigate} />
+      </header>
+      <div className="c2-matrix-grid">
+        <div className="c2-panel c2-panel--pad" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+          <div className="c2-panel__sheen" />
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ color: '#ff0055', fontSize: '1.1rem', fontWeight: 'bold' }}>{t[lang].ion}</span>
-            <span style={{ color: '#00ff66', fontSize: '0.8rem', background: 'rgba(0,255,102,0.1)', padding: '0.3rem 0.6rem', borderRadius: '0.4rem' }}>{t[lang].math}</span>
+            <span className="c2-section__title c2-section__title--alert" style={{ border: 'none', padding: 0, fontSize: '0.9rem' }}>{t[lang].ion}</span>
+            <span className="c2-chip c2-chip--live">{t[lang].math}</span>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem', textAlign: 'center' }}>
-            <div style={{ background: 'rgba(0,240,255,0.03)', padding: '1rem', borderRadius: '0.8rem', border: '1px solid rgba(0,240,255,0.1)' }}>
-              <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.5)' }}>TEC</div>
-              <div style={{ fontSize: '1.1rem', color: '#00f0ff', fontWeight: 'bold', marginTop: '0.3rem' }}>{telemetry.tec}</div>
-            </div>
-            <div style={{ background: 'rgba(0,240,255,0.03)', padding: '1rem', borderRadius: '0.8rem', border: '1px solid rgba(0,240,255,0.1)' }}>
-              <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.5)' }}>S4</div>
-              <div style={{ fontSize: '1.1rem', color: '#00f0ff', fontWeight: 'bold', marginTop: '0.3rem' }}>{telemetry.s4}</div>
-            </div>
-            <div style={{ background: 'rgba(0,240,255,0.03)', padding: '1rem', borderRadius: '0.8rem', border: '1px solid rgba(0,240,255,0.1)' }}>
-              <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.5)' }}>PLASMA FREQ</div>
-              <div style={{ fontSize: '1.1rem', color: '#00f0ff', fontWeight: 'bold', marginTop: '0.3rem' }}>{telemetry.plasmaFreq} MHz</div>
-            </div>
+          <div className="c2-metric-grid c2-metric-grid--3">
+            <div className="c2-metric"><div className="c2-label">TEC</div><div className="c2-value">{telemetry.tec}</div></div>
+            <div className="c2-metric"><div className="c2-label">S4</div><div className="c2-value">{telemetry.s4}</div></div>
+            <div className="c2-metric"><div className="c2-label">PLASMA FREQ</div><div className="c2-value">{telemetry.plasmaFreq} MHz</div></div>
           </div>
-          <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)' }}>{t[lang].desc1}</div>
+          <div className="c2-muted">{t[lang].desc1}</div>
         </div>
 
-        <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(0,240,255,0.2)', borderRadius: '1.5rem', padding: '1.5rem', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+        <div className="c2-panel c2-panel--pad" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+          <div className="c2-panel__sheen" />
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ color: '#ff0055', fontSize: '1.1rem', fontWeight: 'bold' }}>{t[lang].spec}</span>
-            <span style={{ color: '#00ff66', fontSize: '0.8rem', background: 'rgba(0,255,102,0.1)', padding: '0.3rem 0.6rem', borderRadius: '0.4rem' }}>{t[lang].lock}</span>
+            <span className="c2-section__title c2-section__title--alert" style={{ border: 'none', padding: 0, fontSize: '0.9rem' }}>{t[lang].spec}</span>
+            <span className="c2-chip c2-chip--live">{t[lang].lock}</span>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem', textAlign: 'center' }}>
-            <div style={{ background: 'rgba(0,240,255,0.03)', padding: '1rem', borderRadius: '0.8rem', border: '1px solid rgba(0,240,255,0.1)' }}>
-              <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.5)' }}>C/N0</div>
-              <div style={{ fontSize: '1.1rem', color: '#00f0ff', fontWeight: 'bold', marginTop: '0.3rem' }}>{telemetry.cnr} dB</div>
-            </div>
-            <div style={{ background: 'rgba(0,240,255,0.03)', padding: '1rem', borderRadius: '0.8rem', border: '1px solid rgba(0,240,255,0.1)' }}>
-              <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.5)' }}>BER</div>
-              <div style={{ fontSize: '1.1rem', color: '#00f0ff', fontWeight: 'bold', marginTop: '0.3rem' }}>{telemetry.ber}</div>
-            </div>
-            <div style={{ background: 'rgba(0,240,255,0.03)', padding: '1rem', borderRadius: '0.8rem', border: '1px solid rgba(0,240,255,0.1)' }}>
-              <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.5)' }}>BITRATE</div>
-              <div style={{ fontSize: '1.1rem', color: '#00f0ff', fontWeight: 'bold', marginTop: '0.3rem' }}>{telemetry.bitrate}</div>
-            </div>
+          <div className="c2-metric-grid c2-metric-grid--3">
+            <div className="c2-metric"><div className="c2-label">C/N0</div><div className="c2-value">{telemetry.cnr} dB</div></div>
+            <div className="c2-metric"><div className="c2-label">BER</div><div className="c2-value">{telemetry.ber}</div></div>
+            <div className="c2-metric"><div className="c2-label">BITRATE</div><div className="c2-value">{telemetry.bitrate}</div></div>
           </div>
-          <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)' }}>{t[lang].desc2}</div>
+          <div className="c2-muted">{t[lang].desc2}</div>
         </div>
 
-        <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(0,240,255,0.2)', borderRadius: '1.5rem', padding: '1.5rem', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+        <div className="c2-panel c2-panel--pad" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+          <div className="c2-panel__sheen" />
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ color: '#ff0055', fontSize: '1.1rem', fontWeight: 'bold' }}>{t[lang].therm}</span>
-            <span style={{ color: telemetry.radiatorStatus === t[lang].opt ? '#00ff66' : '#ff0055', fontSize: '0.8rem', background: 'rgba(0,255,102,0.1)', padding: '0.3rem 0.6rem', borderRadius: '0.4rem' }}>{telemetry.radiatorStatus}</span>
+            <span className="c2-section__title c2-section__title--alert" style={{ border: 'none', padding: 0, fontSize: '0.9rem' }}>{t[lang].therm}</span>
+            <span className={`c2-chip ${telemetry.radiatorStatus === t[lang].opt ? 'c2-chip--live' : 'c2-chip--alert'}`}>{telemetry.radiatorStatus}</span>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem', textAlign: 'center' }}>
-            <div style={{ background: 'rgba(0,240,255,0.03)', padding: '1rem', borderRadius: '0.8rem', border: '1px solid rgba(0,240,255,0.1)' }}>
-              <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.5)' }}>{t[lang].core}</div>
-              <div style={{ fontSize: '1.1rem', color: '#00f0ff', fontWeight: 'bold', marginTop: '0.3rem' }}>{telemetry.coreTemp} °C</div>
-            </div>
-            <div style={{ background: 'rgba(0,240,255,0.03)', padding: '1rem', borderRadius: '0.8rem', border: '1px solid rgba(0,240,255,0.1)' }}>
-              <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.5)' }}>{t[lang].eff}</div>
-              <div style={{ fontSize: '1.1rem', color: '#00f0ff', fontWeight: 'bold', marginTop: '0.3rem' }}>{telemetry.efficiency}%</div>
-            </div>
-            <div style={{ background: 'rgba(0,240,255,0.03)', padding: '1rem', borderRadius: '0.8rem', border: '1px solid rgba(0,240,255,0.1)' }}>
-              <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.5)' }}>{t[lang].load}</div>
-              <div style={{ fontSize: '1.1rem', color: '#00f0ff', fontWeight: 'bold', marginTop: '0.3rem' }}>1.4 kW</div>
-            </div>
+          <div className="c2-metric-grid c2-metric-grid--3">
+            <div className="c2-metric"><div className="c2-label">{t[lang].core}</div><div className="c2-value">{telemetry.coreTemp} °C</div></div>
+            <div className="c2-metric"><div className="c2-label">{t[lang].eff}</div><div className="c2-value">{telemetry.efficiency}%</div></div>
+            <div className="c2-metric"><div className="c2-label">{t[lang].load}</div><div className="c2-value">1.4 kW</div></div>
           </div>
-          <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)' }}>{t[lang].desc3}</div>
+          <div className="c2-muted">{t[lang].desc3}</div>
         </div>
 
-        <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(0,240,255,0.2)', borderRadius: '1.5rem', padding: '1.5rem', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+        <div className="c2-panel c2-panel--pad" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+          <div className="c2-panel__sheen" />
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ color: '#ff0055', fontSize: '1.1rem', fontWeight: 'bold' }}>{t[lang].quant}</span>
-            <span style={{ color: '#00ff66', fontSize: '0.8rem', background: 'rgba(0,255,102,0.1)', padding: '0.3rem 0.6rem', borderRadius: '0.4rem' }}>{t[lang].secure}</span>
+            <span className="c2-section__title c2-section__title--alert" style={{ border: 'none', padding: 0, fontSize: '0.9rem' }}>{t[lang].quant}</span>
+            <span className="c2-chip c2-chip--live">{t[lang].secure}</span>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem', textAlign: 'center' }}>
-            <div style={{ background: 'rgba(0,240,255,0.03)', padding: '1rem', borderRadius: '0.8rem', border: '1px solid rgba(0,240,255,0.1)' }}>
-              <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.5)' }}>QBER</div>
-              <div style={{ fontSize: '1.1rem', color: '#00f0ff', fontWeight: 'bold', marginTop: '0.3rem' }}>{telemetry.qber}%</div>
-            </div>
-            <div style={{ background: 'rgba(0,240,255,0.03)', padding: '1rem', borderRadius: '0.8rem', border: '1px solid rgba(0,240,255,0.1)' }}>
-              <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.5)' }}>{t[lang].stream}</div>
-              <div style={{ fontSize: '1.0rem', color: '#00ff66', fontWeight: 'bold', marginTop: '0.3rem', fontFamily: 'monospace' }}>{telemetry.keyStream}</div>
-            </div>
-            <div style={{ background: 'rgba(0,240,255,0.03)', padding: '1rem', borderRadius: '0.8rem', border: '1px solid rgba(0,240,255,0.1)' }}>
-              <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.5)' }}>{t[lang].rate}</div>
-              <div style={{ fontSize: '1.1rem', color: '#00f0ff', fontWeight: 'bold', marginTop: '0.3rem' }}>{telemetry.rate}</div>
-            </div>
+          <div className="c2-metric-grid c2-metric-grid--3">
+            <div className="c2-metric"><div className="c2-label">QBER</div><div className="c2-value">{telemetry.qber}%</div></div>
+            <div className="c2-metric"><div className="c2-label">{t[lang].stream}</div><div className="c2-value c2-value--signal" style={{ fontFamily: 'var(--font-mono)', fontSize: '0.85rem' }}>{telemetry.keyStream}</div></div>
+            <div className="c2-metric"><div className="c2-label">{t[lang].rate}</div><div className="c2-value">{telemetry.rate}</div></div>
           </div>
-          <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)' }}>{t[lang].desc4}</div>
+          <div className="c2-muted">{t[lang].desc4}</div>
         </div>
       </div>
     </div>

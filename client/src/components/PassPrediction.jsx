@@ -30,30 +30,28 @@ export default function PassPrediction() {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem', fontFamily: 'Orbitron, sans-serif', height: '100%', boxSizing: 'border-box' }}>
-      <div style={{ color: '#00f0ff', fontSize: '0.8rem', fontWeight: 'bold', letterSpacing: '1px' }}>
-        {t[lang].title}
-      </div>
+    <div className="c2-section">
+      <div className="c2-section__title">{t[lang].title}</div>
 
-      <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(0,240,255,0.2)', borderRadius: '0.8rem', padding: '0.8rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div className="c2-metric c2-metric--wide">
         <div>
-          <div style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.5)' }}>{t[lang].target}</div>
-          <div style={{ fontSize: '0.9rem', color: '#00f0ff', fontWeight: 'bold', marginTop: '0.2rem' }}>{satName}</div>
+          <div className="c2-label">{t[lang].target}</div>
+          <div className="c2-value">{satName}</div>
         </div>
         <div style={{ textAlign: 'right' }}>
-          <div style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.5)' }}>{t[lang].maxEl}</div>
-          <div style={{ fontSize: '0.9rem', color: '#00ff66', fontWeight: 'bold', marginTop: '0.2rem' }}>{passData.maxEl}</div>
+          <div className="c2-label">{t[lang].maxEl}</div>
+          <div className="c2-value c2-value--signal">{passData.maxEl}</div>
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.8rem' }}>
-        <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(0,240,255,0.2)', borderRadius: '0.8rem', padding: '0.8rem' }}>
-          <div style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.5)' }}>{t[lang].duration}</div>
-          <div style={{ fontSize: '0.9rem', color: '#ffcc00', fontWeight: 'bold', marginTop: '0.3rem' }}>{passData.duration}</div>
+      <div className="c2-metric-grid">
+        <div className="c2-metric">
+          <div className="c2-label">{t[lang].duration}</div>
+          <div className="c2-value c2-value--amber">{passData.duration}</div>
         </div>
-        <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(0,240,255,0.2)', borderRadius: '0.8rem', padding: '0.8rem' }}>
-          <div style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.5)' }}>{t[lang].aos}</div>
-          <div style={{ fontSize: '0.9rem', color: '#ff3c7e', fontWeight: 'bold', marginTop: '0.3rem' }}>{passData.aos}</div>
+        <div className="c2-metric">
+          <div className="c2-label">{t[lang].aos}</div>
+          <div className="c2-value c2-value--plasma">{passData.aos}</div>
         </div>
       </div>
     </div>

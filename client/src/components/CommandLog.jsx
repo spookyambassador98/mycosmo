@@ -31,28 +31,29 @@ export default function CommandLog() {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem', fontFamily: 'Orbitron, sans-serif', height: '100%', boxSizing: 'border-box' }}>
-      <div style={{ color: '#00f0ff', fontSize: '0.8rem', fontWeight: 'bold', letterSpacing: '1px' }}>
-        {t[lang].title}
-      </div>
+    <div className="c2-section">
+      <div className="c2-section__title">{t[lang].title}</div>
 
-      <div style={{ flex: 1, background: 'rgba(3,3,5,0.8)', border: '1px solid rgba(0,240,255,0.2)', borderRadius: '0.8rem', padding: '0.8rem', display: 'flex', flexDirection: 'column', gap: '0.4rem', overflowY: 'auto', minHeight: '90px' }}>
+      <div className="c2-log">
         {logs.map((log, i) => (
-          <div key={i} style={{ fontSize: '0.7rem', color: log.includes('UPLINK') ? '#ff3c7e' : '#00ff66', fontFamily: 'monospace' }}>
+          <div
+            key={i}
+            className={`c2-log__line ${log.includes('UPLINK') ? 'c2-log__line--uplink' : ''}`}
+          >
             {log}
           </div>
         ))}
       </div>
 
-      <form onSubmit={handleExec} style={{ display: 'flex', gap: '0.5rem' }}>
-        <input 
-          type="text" 
-          value={cmdInput} 
+      <form onSubmit={handleExec} className="c2-form">
+        <input
+          type="text"
+          value={cmdInput}
           onChange={(e) => setCmdInput(e.target.value)}
           placeholder={t[lang].placeholder}
-          style={{ flex: 1, background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(0,240,255,0.3)', borderRadius: '0.5rem', padding: '0.5rem 0.8rem', color: '#fff', fontSize: '0.75rem', fontFamily: 'Orbitron, sans-serif', outline: 'none' }}
+          className="c2-input"
         />
-        <button type="submit" style={{ background: 'rgba(0,240,255,0.15)', border: '1px solid #00f0ff', color: '#00f0ff', padding: '0.5rem 1rem', borderRadius: '0.5rem', cursor: 'pointer', fontFamily: 'Orbitron, sans-serif', fontWeight: 'bold', fontSize: '0.75rem' }}>
+        <button type="submit" className="c2-btn c2-btn--cyan">
           EXEC
         </button>
       </form>
