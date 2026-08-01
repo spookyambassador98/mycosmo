@@ -38,7 +38,7 @@ export default function PassPrediction() {
           <div className="c2-label">{t[lang].target}</div>
           <div className="c2-value">{satName}</div>
         </div>
-        <div style={{ textAlign: 'right' }}>
+        <div className="c2-metric__side">
           <div className="c2-label">{t[lang].maxEl}</div>
           <div className="c2-value c2-value--signal">{passData.maxEl}</div>
         </div>

@@ -162,7 +162,7 @@ export default function BlackHoleMatrixView({ activePage, onNavigate }) {
   return (
     <div className="c2-deck">
       <div className="c2-atmosphere" />
-      <header className="c2-header" style={{ borderColor: 'rgba(255,176,32,0.3)' }}>
+      <header className="c2-header c2-header--sticky" style={{ borderColor: 'rgba(255,176,32,0.3)' }}>
         <h1 className="c2-page-title c2-page-title--amber">{t[lang].header}</h1>
         <C2Nav activePage={activePage} onNavigate={onNavigate} />
       </header>

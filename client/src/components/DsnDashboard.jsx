@@ -45,7 +45,7 @@ export default function DsnDashboard() {
           <div className="c2-label">{t[lang].target}</div>
           <div className="c2-value c2-value--plasma">{satName}</div>
         </div>
-        <div style={{ textAlign: 'right' }}>
+        <div className="c2-metric__side">
           <div className="c2-label">{t[lang].freq}</div>
           <div className="c2-value c2-value--amber">2.247 GHz</div>
         </div>

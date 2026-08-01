@@ -122,7 +122,7 @@ export default function SolarMatrixView({ activePage, onNavigate }) {
   return (
     <div className="c2-deck">
       <div className="c2-atmosphere" />
-      <header className="c2-header">
+      <header className="c2-header c2-header--sticky">
         <h1 className="c2-page-title">{t[lang].header}</h1>
         <C2Nav activePage={activePage} onNavigate={onNavigate} />
       </header>

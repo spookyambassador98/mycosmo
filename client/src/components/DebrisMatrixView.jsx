@@ -158,7 +158,7 @@ export default function DebrisMatrixView({ activePage, onNavigate }) {
   return (
     <div className="c2-deck">
       <div className="c2-atmosphere" />
-      <header className="c2-header" style={{ borderColor: 'rgba(255,60,126,0.35)' }}>
+      <header className="c2-header c2-header--sticky" style={{ borderColor: 'rgba(255,60,126,0.35)' }}>
         <h1 className="c2-page-title c2-page-title--plasma">{t[lang].header}</h1>
         <C2Nav activePage={activePage} onNavigate={onNavigate} />
       </header>
