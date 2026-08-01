@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import useStore from '../store/useStore';
 import useIsMobile from '../hooks/useIsMobile';
@@ -41,18 +42,29 @@ export default function C2Nav({ activePage, onNavigate }) {
   const { lang, setLang } = useStore();
   const isMobile = useIsMobile();
   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const labels = NAV_LABELS[lang];
 
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
     if (!open) return undefined;
-    const prev = document.body.style.overflow;
+
+    const deck = document.querySelector('.c2-deck');
+    const prevBody = document.body.style.overflow;
+    const prevDeck = deck ? deck.style.overflow : '';
     document.body.style.overflow = 'hidden';
+    if (deck) deck.style.overflow = 'hidden';
+
     const onKey = (e) => {
       if (e.key === 'Escape') setOpen(false);
     };
     window.addEventListener('keydown', onKey);
     return () => {
-      document.body.style.overflow = prev;
+      document.body.style.overflow = prevBody;
+      if (deck) deck.style.overflow = prevDeck;
       window.removeEventListener('keydown', onKey);
     };
   }, [open]);
@@ -94,6 +106,79 @@ export default function C2Nav({ activePage, onNavigate }) {
     );
   }
 
+  const drawer = (
+    <AnimatePresence>
+      {open && (
+        <motion.div
+          className="c2-drawer"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
+        >
+          <button
+            type="button"
+            className="c2-drawer__backdrop"
+            aria-label={labels.close}
+            onClick={() => setOpen(false)}
+          />
+          <motion.aside
+            id="c2-command-drawer"
+            className="c2-drawer__panel"
+            initial={{ y: '110%' }}
+            animate={{ y: 0 }}
+            exit={{ y: '110%' }}
+            transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+            role="dialog"
+            aria-modal="true"
+            aria-label={labels.routes}
+          >
+            <div className="c2-drawer__handle" />
+            <div className="c2-drawer__top">
+              <div>
+                <div className="c2-drawer__kicker">ORBITAL C2</div>
+                <div className="c2-drawer__title">{labels.routes}</div>
+              </div>
+              <button
+                type="button"
+                className="c2-btn c2-btn--ghost"
+                onClick={() => setOpen(false)}
+              >
+                {labels.close}
+              </button>
+            </div>
+
+            <div className="c2-drawer__routes">
+              {PAGES.map((page, index) => {
+                const isActive = activePage === page.id;
+                return (
+                  <motion.button
+                    key={page.id}
+                    type="button"
+                    className={`c2-route c2-route--${page.variant}${isActive ? ' is-active' : ''}`}
+                    onClick={() => go(page.id)}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.03 * index, duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
+                  >
+                    <span className="c2-route__index">0{index + 1}</span>
+                    <span className="c2-route__body">
+                      <span className="c2-route__name">{labels[page.key]}</span>
+                      <span className="c2-route__hint">
+                        {lang === 'RU' ? page.hintRU : page.hintEN}
+                      </span>
+                    </span>
+                    <span className="c2-route__chevron" aria-hidden="true" />
+                  </motion.button>
+                );
+              })}
+            </div>
+          </motion.aside>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+
   return (
     <>
       <div className="c2-nav-mobile">
@@ -121,76 +206,7 @@ export default function C2Nav({ activePage, onNavigate }) {
         </button>
       </div>
 
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            className="c2-drawer"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.22 }}
-          >
-            <button
-              type="button"
-              className="c2-drawer__backdrop"
-              aria-label={labels.close}
-              onClick={() => setOpen(false)}
-            />
-            <motion.aside
-              id="c2-command-drawer"
-              className="c2-drawer__panel"
-              initial={{ y: '100%' }}
-              animate={{ y: 0 }}
-              exit={{ y: '100%' }}
-              transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
-              role="dialog"
-              aria-modal="true"
-              aria-label={labels.routes}
-            >
-              <div className="c2-drawer__handle" />
-              <div className="c2-drawer__top">
-                <div>
-                  <div className="c2-drawer__kicker">ORBITAL C2</div>
-                  <div className="c2-drawer__title">{labels.routes}</div>
-                </div>
-                <button
-                  type="button"
-                  className="c2-btn c2-btn--ghost"
-                  onClick={() => setOpen(false)}
-                >
-                  {labels.close}
-                </button>
-              </div>
-
-              <div className="c2-drawer__routes">
-                {PAGES.map((page, index) => {
-                  const isActive = activePage === page.id;
-                  return (
-                    <motion.button
-                      key={page.id}
-                      type="button"
-                      className={`c2-route c2-route--${page.variant}${isActive ? ' is-active' : ''}`}
-                      onClick={() => go(page.id)}
-                      initial={{ opacity: 0, y: 12 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.04 * index, duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-                    >
-                      <span className="c2-route__index">0{index + 1}</span>
-                      <span className="c2-route__body">
-                        <span className="c2-route__name">{labels[page.key]}</span>
-                        <span className="c2-route__hint">
-                          {lang === 'RU' ? page.hintRU : page.hintEN}
-                        </span>
-                      </span>
-                      <span className="c2-route__chevron" aria-hidden="true" />
-                    </motion.button>
-                  );
-                })}
-              </div>
-            </motion.aside>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {mounted ? createPortal(drawer, document.body) : null}
     </>
   );
 }

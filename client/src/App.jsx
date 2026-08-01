@@ -126,32 +126,41 @@ export default function App() {
     </motion.div>
   );
 
+  const headerInner = (
+    <>
+      <div className="c2-brand">
+        <div className="c2-brand__mark">
+          <span className="c2-brand__ring" />
+          <span className="c2-brand__ring c2-brand__ring--delayed" />
+          <span className="c2-brand__core" />
+        </div>
+        <div className="c2-brand__text">
+          <div className="c2-brand__title">
+            <span>{t[lang].title}</span> // HUD
+          </div>
+          <span className="c2-brand__sub">{t[lang].subtitle}</span>
+        </div>
+      </div>
+      <C2Nav activePage={activePage} onNavigate={setActivePage} />
+    </>
+  );
+
   return (
     <div className={`c2-deck${isMobile ? ' c2-deck--mobile' : ' c2-deck--desktop'}`}>
       <div className="c2-atmosphere" />
 
-      <motion.header
-        className="c2-header c2-header--sticky"
-        initial={{ opacity: 0, y: -12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-      >
-        <div className="c2-brand">
-          <div className="c2-brand__mark">
-            <span className="c2-brand__ring" />
-            <span className="c2-brand__ring c2-brand__ring--delayed" />
-            <span className="c2-brand__core" />
-          </div>
-          <div className="c2-brand__text">
-            <div className="c2-brand__title">
-              <span>{t[lang].title}</span> // HUD
-            </div>
-            <span className="c2-brand__sub">{t[lang].subtitle}</span>
-          </div>
-        </div>
-
-        <C2Nav activePage={activePage} onNavigate={setActivePage} />
-      </motion.header>
+      {isMobile ? (
+        <header className="c2-header c2-header--sticky">{headerInner}</header>
+      ) : (
+        <motion.header
+          className="c2-header c2-header--sticky"
+          initial={{ opacity: 0, y: -12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+        >
+          {headerInner}
+        </motion.header>
+      )}
 
       {isMobile ? (
         <div className="c2-mobile-stack">
