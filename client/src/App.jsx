@@ -13,6 +13,7 @@ import SolarMatrixView from './components/SolarMatrixView';
 import BlackHoleMatrixView from './components/BlackHoleMatrixView';
 import DebrisMatrixView from './components/DebrisMatrixView';
 import useStore from './store/useStore';
+import useIsMobile from './hooks/useIsMobile';
 
 const fadeUp = {
   initial: { opacity: 0, y: 10 },
@@ -23,6 +24,7 @@ const fadeUp = {
 export default function App() {
   const [activePage, setActivePage] = useState('main');
   const { lang, showDebris, toggleDebris } = useStore();
+  const isMobile = useIsMobile();
 
   const t = {
     RU: {
@@ -59,8 +61,73 @@ export default function App() {
     return <DebrisMatrixView activePage={activePage} onNavigate={setActivePage} />;
   }
 
+  const globe = (
+    <motion.div
+      className="c2-panel c2-panel--globe"
+      {...fadeUp}
+      transition={{ ...fadeUp.transition, delay: 0.05 }}
+    >
+      <div className="c2-panel__sheen" />
+      <div className="c2-scanline" />
+      <button
+        type="button"
+        onClick={toggleDebris}
+        className={`c2-btn c2-btn--overlay ${showDebris ? 'c2-btn--active' : 'c2-btn--ghost'}`}
+      >
+        {showDebris ? t[lang].debrisOn : t[lang].debrisOff}
+      </button>
+      <Canvas camera={{ position: [0, 12, 38], fov: 45 }}>
+        <EarthScene />
+      </Canvas>
+    </motion.div>
+  );
+
+  const inspector = (
+    <motion.div
+      className="c2-panel c2-panel--pad c2-panel--fill"
+      {...fadeUp}
+      transition={{ ...fadeUp.transition, delay: 0.12 }}
+    >
+      <div className="c2-panel__sheen" />
+      <SatInspector />
+    </motion.div>
+  );
+
+  const dsn = (
+    <motion.div
+      className="c2-panel c2-panel--pad c2-panel--fill"
+      {...fadeUp}
+      transition={{ ...fadeUp.transition, delay: 0.1 }}
+    >
+      <div className="c2-panel__sheen" />
+      <DsnDashboard />
+    </motion.div>
+  );
+
+  const pass = (
+    <motion.div
+      className="c2-panel c2-panel--pad c2-panel--fill"
+      {...fadeUp}
+      transition={{ ...fadeUp.transition, delay: 0.16 }}
+    >
+      <div className="c2-panel__sheen" />
+      <PassPrediction />
+    </motion.div>
+  );
+
+  const command = (
+    <motion.div
+      className="c2-panel c2-panel--pad c2-panel--fill"
+      {...fadeUp}
+      transition={{ ...fadeUp.transition, delay: 0.22 }}
+    >
+      <div className="c2-panel__sheen" />
+      <CommandLog />
+    </motion.div>
+  );
+
   return (
-    <div className="c2-deck">
+    <div className={`c2-deck${isMobile ? ' c2-deck--mobile' : ' c2-deck--desktop'}`}>
       <div className="c2-atmosphere" />
 
       <motion.header
@@ -86,64 +153,27 @@ export default function App() {
         <C2Nav activePage={activePage} onNavigate={setActivePage} />
       </motion.header>
 
-      <div className="c2-grid">
-        <div className="c2-col c2-col--primary">
-          <motion.div
-            className="c2-panel c2-panel--globe"
-            {...fadeUp}
-            transition={{ ...fadeUp.transition, delay: 0.05 }}
-          >
-            <div className="c2-panel__sheen" />
-            <div className="c2-scanline" />
-            <button
-              type="button"
-              onClick={toggleDebris}
-              className={`c2-btn c2-btn--overlay ${showDebris ? 'c2-btn--active' : 'c2-btn--ghost'}`}
-            >
-              {showDebris ? t[lang].debrisOn : t[lang].debrisOff}
-            </button>
-            <Canvas camera={{ position: [0, 12, 38], fov: 45 }}>
-              <EarthScene />
-            </Canvas>
-          </motion.div>
-
-          <motion.div
-            className="c2-panel c2-panel--pad c2-panel--fill"
-            {...fadeUp}
-            transition={{ ...fadeUp.transition, delay: 0.12 }}
-          >
-            <div className="c2-panel__sheen" />
-            <SatInspector />
-          </motion.div>
+      {isMobile ? (
+        <div className="c2-mobile-stack">
+          {globe}
+          {dsn}
+          {pass}
+          {command}
+          {inspector}
         </div>
-
-        <div className="c2-col c2-col--secondary">
-          <motion.div
-            className="c2-panel c2-panel--pad c2-panel--fill"
-            {...fadeUp}
-            transition={{ ...fadeUp.transition, delay: 0.1 }}
-          >
-            <div className="c2-panel__sheen" />
-            <DsnDashboard />
-          </motion.div>
-          <motion.div
-            className="c2-panel c2-panel--pad c2-panel--fill"
-            {...fadeUp}
-            transition={{ ...fadeUp.transition, delay: 0.16 }}
-          >
-            <div className="c2-panel__sheen" />
-            <PassPrediction />
-          </motion.div>
-          <motion.div
-            className="c2-panel c2-panel--pad c2-panel--fill"
-            {...fadeUp}
-            transition={{ ...fadeUp.transition, delay: 0.22 }}
-          >
-            <div className="c2-panel__sheen" />
-            <CommandLog />
-          </motion.div>
+      ) : (
+        <div className="c2-grid">
+          <div className="c2-col c2-col--primary">
+            {globe}
+            {inspector}
+          </div>
+          <div className="c2-col c2-col--secondary">
+            {dsn}
+            {pass}
+            {command}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

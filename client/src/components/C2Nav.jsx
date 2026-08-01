@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import useStore from '../store/useStore';
+import useIsMobile from '../hooks/useIsMobile';
 
 const PAGES = [
   { id: 'main', key: 'mainBtn', variant: 'ghost', hintRU: 'Командный HUD', hintEN: 'Command HUD' },
@@ -38,6 +39,7 @@ export const NAV_LABELS = {
 
 export default function C2Nav({ activePage, onNavigate }) {
   const { lang, setLang } = useStore();
+  const isMobile = useIsMobile();
   const [open, setOpen] = useState(false);
   const labels = NAV_LABELS[lang];
 
@@ -55,28 +57,17 @@ export default function C2Nav({ activePage, onNavigate }) {
     };
   }, [open]);
 
+  useEffect(() => {
+    if (!isMobile) setOpen(false);
+  }, [isMobile]);
+
   const go = (id) => {
     onNavigate(id);
     setOpen(false);
   };
 
-  const navButtons = PAGES.map((page) => {
-    const isActive = activePage === page.id;
+  if (!isMobile) {
     return (
-      <button
-        key={page.id}
-        type="button"
-        className={`c2-btn c2-btn--${page.variant}${isActive ? ' c2-btn--nav-active' : ''}`}
-        onClick={() => go(page.id)}
-        aria-current={isActive ? 'page' : undefined}
-      >
-        {labels[page.key]}
-      </button>
-    );
-  });
-
-  return (
-    <>
       <nav className="c2-nav c2-nav--desktop" aria-label="Desktop navigation">
         <button
           type="button"
@@ -85,9 +76,26 @@ export default function C2Nav({ activePage, onNavigate }) {
         >
           {lang}
         </button>
-        {navButtons}
+        {PAGES.map((page) => {
+          const isActive = activePage === page.id;
+          return (
+            <button
+              key={page.id}
+              type="button"
+              className={`c2-btn c2-btn--${page.variant}${isActive ? ' c2-btn--nav-active' : ''}`}
+              onClick={() => go(page.id)}
+              aria-current={isActive ? 'page' : undefined}
+            >
+              {labels[page.key]}
+            </button>
+          );
+        })}
       </nav>
+    );
+  }
 
+  return (
+    <>
       <div className="c2-nav-mobile">
         <button
           type="button"

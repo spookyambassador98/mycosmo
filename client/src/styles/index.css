@@ -248,7 +248,7 @@ body,
   margin-top: 0.15rem;
 }
 
-.c2-nav {
+.c2-nav--desktop {
   display: flex;
   gap: 0.4rem;
   align-items: center;
@@ -256,9 +256,23 @@ body,
   justify-content: flex-end;
 }
 
-.c2-nav--desktop { display: flex; }
-.c2-nav-mobile { display: none; }
+.c2-nav-mobile {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
 .c2-brand__text { min-width: 0; }
+
+.c2-mobile-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  flex: none;
+  width: 100%;
+  min-height: 0;
+}
 
 /* ═══════════════════════════════════════════════════════════
    BUTTONS
@@ -1104,16 +1118,16 @@ body,
     overflow: hidden;
   }
 
-  .c2-deck {
+  .c2-deck,
+  .c2-deck--mobile {
     width: 100%;
     height: 100dvh;
     max-height: 100dvh;
     padding:
-      max(0.65rem, env(safe-area-inset-top, 0px))
-      max(0.65rem, env(safe-area-inset-right, 0px))
-      max(0.65rem, env(safe-area-inset-bottom, 0px))
-      max(0.65rem, env(safe-area-inset-left, 0px));
-    gap: 0.65rem;
+      max(0.7rem, env(safe-area-inset-top, 0px))
+      0.7rem
+      max(0.7rem, env(safe-area-inset-bottom, 0px));
+    gap: 0.7rem;
     overflow-x: hidden;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
@@ -1125,8 +1139,8 @@ body,
     top: 0;
     z-index: 40;
     gap: 0.65rem;
-    padding: 0.7rem 0.85rem;
-    border-radius: 12px;
+    padding: 0.75rem 0.9rem;
+    border-radius: 14px;
     overflow: visible;
   }
 
@@ -1138,7 +1152,7 @@ body,
   .c2-header .c2-page-title {
     flex: 1;
     min-width: 0;
-    font-size: 0.68rem;
+    font-size: 0.7rem;
     letter-spacing: 0.06em;
     line-height: 1.35;
     white-space: normal;
@@ -1148,35 +1162,29 @@ body,
     overflow: hidden;
   }
 
-  .c2-nav--desktop { display: none !important; }
-
-  .c2-nav-mobile {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    flex-shrink: 0;
-  }
-
   .c2-brand__mark {
     width: 30px;
     height: 30px;
   }
 
   .c2-brand__title {
-    font-size: 0.72rem;
+    font-size: 0.74rem;
     letter-spacing: 0.1em;
   }
 
   .c2-brand__sub {
     font-size: 0.52rem;
-    letter-spacing: 0.16em;
+    letter-spacing: 0.14em;
+  }
+
+  .c2-mobile-stack {
+    gap: 0.7rem;
   }
 
   .c2-grid {
     display: flex;
     flex-direction: column;
-    grid-template-columns: 1fr;
-    gap: 0.65rem;
+    gap: 0.7rem;
     overflow: visible;
     flex: none;
     min-height: 0;
@@ -1185,17 +1193,8 @@ body,
   .c2-col {
     height: auto;
     overflow: visible;
-    gap: 0.65rem;
+    gap: 0.7rem;
   }
-
-  /* Flatten primary so we can order: globe → telemetry → inspector */
-  .c2-col--primary {
-    display: contents;
-  }
-
-  .c2-grid > .c2-panel--globe { order: 0; }
-  .c2-grid > .c2-col--secondary { order: 1; }
-  .c2-grid > .c2-panel--pad { order: 2; }
 
   .c2-panel--fill {
     flex: none;
@@ -1204,39 +1203,34 @@ body,
   .c2-panel--globe {
     flex: none;
     width: 100%;
-    height: clamp(260px, 46dvh, 420px);
-    min-height: 260px;
-    border-radius: 14px;
+    height: clamp(280px, 48dvh, 440px);
+    min-height: 280px;
+    border-radius: 16px;
   }
 
   .c2-panel--pad {
-    padding: 1rem 1rem 1.05rem;
+    padding: 1.05rem 1.05rem 1.1rem;
   }
 
-  .c2-panel:hover {
-    transform: none;
-  }
-
-  .c2-btn:hover {
-    transform: none;
-  }
-
+  .c2-panel:hover,
+  .c2-btn:hover,
   .c2-metric:hover {
     transform: none;
   }
 
   .c2-btn--overlay {
-    top: 0.75rem;
-    left: 0.75rem;
-    padding: 0.45rem 0.7rem;
-    font-size: 0.62rem;
+    top: 0.8rem;
+    left: 0.8rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.64rem;
+    min-height: 36px;
   }
 
   .c2-matrix-grid,
   .c2-matrix-grid--wide {
     display: flex;
     flex-direction: column;
-    gap: 0.65rem;
+    gap: 0.7rem;
     overflow: visible;
     flex: none;
     min-height: 0;
@@ -1249,80 +1243,74 @@ body,
   }
 
   .c2-matrix-grid--wide > .c2-col {
-    gap: 0.65rem;
+    gap: 0.7rem;
   }
 
   .c2-matrix-grid--wide .c2-canvas-well,
   .c2-canvas-well {
-    min-height: 240px;
-    height: clamp(240px, 42dvh, 380px);
+    min-height: 260px;
+    height: clamp(260px, 44dvh, 400px);
   }
 
   .c2-metric-grid--3 {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
     text-align: left;
   }
 
-  .c2-value--xl {
-    font-size: 1.85rem;
-  }
-
-  .c2-value--lg {
-    font-size: 1.35rem;
-  }
+  .c2-value--xl { font-size: 1.9rem; }
+  .c2-value--lg { font-size: 1.4rem; }
 
   .c2-section__title {
-    font-size: 0.68rem;
+    font-size: 0.7rem;
     letter-spacing: 0.1em;
     flex-wrap: wrap;
     row-gap: 0.35rem;
   }
 
-  .c2-form {
-    flex-direction: column;
-  }
-
+  .c2-form { flex-direction: column; }
   .c2-form .c2-btn {
     width: 100%;
-    min-height: 44px;
+    min-height: 46px;
   }
 
   .c2-input {
-    min-height: 44px;
-    font-size: 16px; /* prevents iOS zoom */
+    min-height: 46px;
+    font-size: 16px;
   }
 
-  .c2-log {
-    min-height: 120px;
-  }
+  .c2-log { min-height: 130px; }
 
   .c2-empty {
-    padding: 1.4rem 0.9rem;
-    font-size: 0.74rem;
-    line-height: 1.45;
+    padding: 1.5rem 1rem;
+    font-size: 0.78rem;
+    line-height: 1.5;
+  }
+
+  .c2-metric-grid {
+    gap: 0.55rem;
+  }
+
+  .c2-metric {
+    padding: 0.85rem 0.9rem;
   }
 }
 
 @media (max-width: 640px) {
-  .c2-deck {
+  .c2-deck,
+  .c2-deck--mobile {
     padding:
-      max(0.55rem, env(safe-area-inset-top, 0px))
-      0.55rem
-      max(0.55rem, env(safe-area-inset-bottom, 0px));
-    gap: 0.55rem;
+      max(0.6rem, env(safe-area-inset-top, 0px))
+      0.6rem
+      max(0.6rem, env(safe-area-inset-bottom, 0px));
+    gap: 0.6rem;
   }
 
   .c2-header {
-    padding: 0.65rem 0.75rem;
+    padding: 0.7rem 0.8rem;
   }
 
-  .c2-menu-toggle__label {
-    display: none;
-  }
-
-  .c2-brand__sub {
-    display: none;
-  }
+  .c2-menu-toggle__label { display: none; }
+  .c2-brand__sub { display: none; }
 
   .c2-metric-grid {
     grid-template-columns: 1fr 1fr;
@@ -1347,24 +1335,28 @@ body,
   }
 
   .c2-panel--globe {
-    height: clamp(240px, 42dvh, 360px);
-    min-height: 240px;
+    height: clamp(250px, 44dvh, 380px);
+    min-height: 250px;
   }
 
   .c2-drawer__panel {
     width: 100%;
-    border-radius: 20px 20px 0 0;
+    border-radius: 22px 22px 0 0;
+  }
+
+  .c2-metric-grid--3 {
+    grid-template-columns: 1fr;
   }
 }
 
 @media (max-width: 420px) {
   .c2-brand__title {
-    font-size: 0.64rem;
+    font-size: 0.66rem;
     letter-spacing: 0.08em;
   }
 
   .c2-header .c2-page-title {
-    font-size: 0.62rem;
+    font-size: 0.64rem;
   }
 
   .c2-metric-grid {
